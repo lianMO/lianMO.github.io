@@ -4,22 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>MZJ的博客</title>
+    <title>网页的跨域访问处理 | MZJ的博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="lianMo">
     
 
     
-    <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="MZJ的博客">
-<meta property="og:url" content="http://yoursite.com/index.html">
+    <meta name="description" content="最近被问到会不会跨域访问时自己只在以前做项目时用过php的curl和jsonp，然后就没有了，而且两者也只是只会用并没有深入研究过，所以这次来探讨一下web端跨域访问的方法。
+关于跨域所谓跨域就是在一个网站的网页访问另一个网站(甚至是同一个服务器不同端口)的接口或者页面，一般情况下，浏览器是禁止这种行为的，为了安全，至于有哪些危险就是另一个课题了，可以看看关于CSRF攻击但是在我们的开发时有时会遇">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网页的跨域访问处理">
+<meta property="og:url" content="http://yoursite.com/2016/03/31/crossfield/index.html">
 <meta property="og:site_name" content="MZJ的博客">
-<meta property="og:description">
+<meta property="og:description" content="最近被问到会不会跨域访问时自己只在以前做项目时用过php的curl和jsonp，然后就没有了，而且两者也只是只会用并没有深入研究过，所以这次来探讨一下web端跨域访问的方法。
+关于跨域所谓跨域就是在一个网站的网页访问另一个网站(甚至是同一个服务器不同端口)的接口或者页面，一般情况下，浏览器是禁止这种行为的，为了安全，至于有哪些危险就是另一个课题了，可以看看关于CSRF攻击但是在我们的开发时有时会遇">
+<meta property="og:updated_time" content="2016-04-01T09:00:03.294Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MZJ的博客">
-<meta name="twitter:description">
+<meta name="twitter:title" content="网页的跨域访问处理">
+<meta name="twitter:description" content="最近被问到会不会跨域访问时自己只在以前做项目时用过php的curl和jsonp，然后就没有了，而且两者也只是只会用并没有深入研究过，所以这次来探讨一下web端跨域访问的方法。
+关于跨域所谓跨域就是在一个网站的网页访问另一个网站(甚至是同一个服务器不同端口)的接口或者页面，一般情况下，浏览器是禁止这种行为的，为了安全，至于有哪些危险就是另一个课题了，可以看看关于CSRF攻击但是在我们的开发时有时会遇">
 
     
     <link rel="alternative" href="/atom.xml" title="MZJ的博客" type="application/atom+xml">
@@ -73,12 +77,10 @@
 </div>
     </header>
     <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/2016/03/31/crossfield/" title="网页的跨域访问处理" itemprop="url">网页的跨域访问处理</a>
@@ -92,9 +94,16 @@
     
   </p>
 </header>
-    <div class="article-content">
-        
-        <p>最近被问到会不会跨域访问时自己只在以前做项目时用过php的curl和jsonp，然后就没有了，<br>而且两者也只是只会用并没有深入研究过，所以这次来探讨一下web端跨域访问的方法。</p>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于跨域"><span class="toc-number">1.</span> <span class="toc-text">关于跨域</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1）document-domain-iframe的设置"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">1）document.domain+iframe的设置</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2）动态创建script，即jsonp"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">2）动态创建script，即jsonp</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3）利用iframe和location-hash"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">3）利用iframe和location.hash</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#4）window-name实现的跨域数据传输"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">4）window.name实现的跨域数据传输</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#5）使用HTML5-postMessage"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">5）使用HTML5 postMessage</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#6）利用flash"><span class="toc-number">1.0.0.6.</span> <span class="toc-text">6）利用flash</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#7）后台代理"><span class="toc-number">1.0.0.7.</span> <span class="toc-text">7）后台代理</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#8）跨域资源共享（CORS）"><span class="toc-number">1.0.0.8.</span> <span class="toc-text">8）跨域资源共享（CORS）</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-document-domain-iframe的设置"><span class="toc-number">2.</span> <span class="toc-text">1. document.domain+iframe的设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-动态创建script，即jsonp"><span class="toc-number">3.</span> <span class="toc-text">2. 动态创建script，即jsonp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-利用iframe和location-hash"><span class="toc-number">4.</span> <span class="toc-text">3. 利用iframe和location.hash</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#hash-属性是一个可读可写的字符串，该字符串是-URL-的锚部分（从-号开始的部分）。"><span class="toc-number">4.0.1.</span> <span class="toc-text">hash 属性是一个可读可写的字符串，该字符串是 URL 的锚部分（从 # 号开始的部分）。</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-window-name实现的跨域数据传输"><span class="toc-number">5.</span> <span class="toc-text">4.window.name实现的跨域数据传输</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-使用html5-postMessage"><span class="toc-number">6.</span> <span class="toc-text">5. 使用html5 postMessage</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-利用flash"><span class="toc-number">7.</span> <span class="toc-text">6. 利用flash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-后台代理"><span class="toc-number">8.</span> <span class="toc-text">7. 后台代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-跨域资源共享（CORS）"><span class="toc-number">9.</span> <span class="toc-text">8. 跨域资源共享（CORS）</span></a></li></ol>
+		
+		</div>
+		
+		<p>最近被问到会不会跨域访问时自己只在以前做项目时用过php的curl和jsonp，然后就没有了，<br>而且两者也只是只会用并没有深入研究过，所以这次来探讨一下web端跨域访问的方法。</p>
 <h3 id="关于跨域"><a href="#关于跨域" class="headerlink" title="关于跨域"></a>关于跨域</h3><p>所谓跨域就是在一个网站的网页访问另一个网站(甚至是同一个服务器不同端口)的接口或者页面，一般情况下，浏览器是禁止<br>这种行为的，为了安全，至于有哪些危险就是另一个课题了，可以看看<a href="http://www.cnblogs.com/hyddd/archive/2009/04/09/1432744.html" target="_blank" rel="external">关于CSRF攻击</a><br>但是在我们的开发时有时会遇上一定要进行跨域访问的情况，那么要如何进行跨域访问呢？<br>在网上查阅了一些资料总结起来有一下几种：</p>
 <h6 id="1）document-domain-iframe的设置"><a href="#1）document-domain-iframe的设置" class="headerlink" title="1）document.domain+iframe的设置"></a>1）document.domain+iframe的设置</h6><h6 id="2）动态创建script，即jsonp"><a href="#2）动态创建script，即jsonp" class="headerlink" title="2）动态创建script，即jsonp"></a>2）动态创建script，即jsonp</h6><h6 id="3）利用iframe和location-hash"><a href="#3）利用iframe和location-hash" class="headerlink" title="3）利用iframe和location.hash"></a>3）利用iframe和location.hash</h6><h6 id="4）window-name实现的跨域数据传输"><a href="#4）window-name实现的跨域数据传输" class="headerlink" title="4）window.name实现的跨域数据传输"></a>4）window.name实现的跨域数据传输</h6><h6 id="5）使用HTML5-postMessage"><a href="#5）使用HTML5-postMessage" class="headerlink" title="5）使用HTML5 postMessage"></a>5）使用HTML5 postMessage</h6><h6 id="6）利用flash"><a href="#6）利用flash" class="headerlink" title="6）利用flash"></a>6）利用flash</h6><h6 id="7）后台代理"><a href="#7）后台代理" class="headerlink" title="7）后台代理"></a>7）后台代理</h6><h6 id="8）跨域资源共享（CORS）"><a href="#8）跨域资源共享（CORS）" class="headerlink" title="8）跨域资源共享（CORS）"></a>8）跨域资源共享（CORS）</h6><p>接下来就一点点介绍。</p>
 <h3 id="1-document-domain-iframe的设置"><a href="#1-document-domain-iframe的设置" class="headerlink" title="1. document.domain+iframe的设置"></a>1. document.domain+iframe的设置</h3><p>注意，这种方式只适合主域相同而子域不同的情况。<br>首先我们有两个页面，一个是发起请求的 www.a.com/a.html,一个是被请求的 script.a.com/b.html,<br>在两个文件里都加上一句：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.domain = <span class="string">"a.com"</span>;</span><br></pre></td></tr></table></figure></p>
@@ -159,14 +168,9 @@ PHP：只需要使用如下的代码设置即可。
  以上的配置的含义是允许任何域发起的请求都可以获取当前服务器的数据。当然，这样有很大的危险性，恶意站点可能通过XSS攻击我们的服务器。所以我们应该尽量有针对性的对限制安全的来源，例如下面的设置使得只有http://blog.csdn.net这个域才能跨域访问服务器的API。
 
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Access-Control-Allow-Origin: http://blog.csdn.net</span><br></pre></td></tr></table></figure>
-</code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
+</code></pre>  
+	</div>
+		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 
@@ -179,186 +183,43 @@ PHP：只需要使用如下的代码设置即可。
 
 
 
-
-<div class="comments-count">
+	<div class="article-share" id="share">
 	
-</div>
+	  <div data-url="http://yoursite.com/2016/03/31/crossfield/" data-title="网页的跨域访问处理 | MZJ的博客" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
 
 </footer>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/03/29/ajax/" title="ajax的简单复习" itemprop="url">ajax的简单复习</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="lianMo" target="_blank" itemprop="author">lianMo</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-29T03:18:36.000Z" itemprop="datePublished"> 发表于 2016-03-29</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>这几天被问到ajax的问题，发现了一些以前没注意到的地方，所以决定系统地<br>重温一次ajax的内容。</p>
-<h3 id="ajax的基本知识"><a href="#ajax的基本知识" class="headerlink" title="ajax的基本知识"></a>ajax的基本知识</h3><p>什么是ajax，引用w3c的介绍</p>
-<h4 id="AJAX-Asynchronous-JavaScript-and-XML（异步的-JavaScript-和-XML）。"><a href="#AJAX-Asynchronous-JavaScript-and-XML（异步的-JavaScript-和-XML）。" class="headerlink" title="AJAX = Asynchronous JavaScript and XML（异步的 JavaScript 和 XML）。"></a>AJAX = Asynchronous JavaScript and XML（异步的 JavaScript 和 XML）。</h4><h4 id="AJAX-不是新的编程语言，而是一种使用现有标准的新方法。"><a href="#AJAX-不是新的编程语言，而是一种使用现有标准的新方法。" class="headerlink" title="AJAX 不是新的编程语言，而是一种使用现有标准的新方法。"></a>AJAX 不是新的编程语言，而是一种使用现有标准的新方法。</h4><h4 id="AJAX-是与服务器交换数据并更新部分网页的艺术，在不重新加载整个页面的情况下。"><a href="#AJAX-是与服务器交换数据并更新部分网页的艺术，在不重新加载整个页面的情况下。" class="headerlink" title="AJAX 是与服务器交换数据并更新部分网页的艺术，在不重新加载整个页面的情况下。"></a>AJAX 是与服务器交换数据并更新部分网页的艺术，在不重新加载整个页面的情况下。</h4><p>重点就在于异步请求，也就是在不刷新页面的情况下通过写请求与服务器通信动态更新页面的状态。<br>然后ajax可以自己写XMLHTTPRequest请求也可以直接使用jquery封装好的函数，<br>像我这种渣渣一般就直接用jq包了…..<br>所以下面我也是介绍jq的ajax用法而不是原生的ajax，如果有机会我再补上一篇原生的吧。</p>
-<h3 id="构造一个ajax函数"><a href="#构造一个ajax函数" class="headerlink" title="构造一个ajax函数"></a>构造一个ajax函数</h3><p>不考虑别的东西我们先看看一个最简单的ajax函数是怎么样的。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">$.ajax(&#123;</span><br><span class="line">     type:<span class="string">"POST"</span>,</span><br><span class="line">     url:<span class="string">"askforajax.php"</span>,</span><br><span class="line">     data:&#123;username:<span class="string">"John"</span>,age:<span class="string">"11"</span>&#125;,</span><br><span class="line">     dataType:<span class="string">"json"</span>,</span><br><span class="line">     success:<span class="function"><span class="keyword">function</span>(<span class="params">result</span>)</span><br><span class="line">     </span>&#123;</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">     &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-<p>这就是一个ajax的基本构造了<br><code>type</code> 说明请求时是以何种方式，有GET和POST两种，区别跟表单提交一样<br><code>url</code> 请求的地址，一般的ajax只支持同域的地址，不支持跨域，跨域请参考jsonp，<br><code>data</code> 请求时传输的数据，基本格式就是{key:value}的形式，数组为{key:[value1,value2]}。<br><code>dataType</code> 预期返回数据类型，可以不设置，浏览器会自动识别处理为字符串，参数为以下<br>xml：返回XML文档，可用JQuery处理。<br>html：返回纯文本HTML信息；包含的script标签会在插入DOM时执行。<br>script：返回纯文本JavaScript代码。不会自动缓存结果。除非设置了cache参数。注意在远程请求时<br>（不在同一个域下），所有post请求都将转为get请求。<br>json：返回JSON数据。<br>jsonp：JSONP格式。使用JSONP形式调用函数时，例如myurl?callback=?，JQuery将自动替换后一个“?”<br>为正确的函数名，以执行回调函数。<br>text：返回纯文本字符串。<br><code>success</code> 请求成功后调用的函数，参数result是返回的数据，可用于返回处理，一般是以字符串<br>的形式返回，但是假如对方传的是json字符串，有两种处理，一种是显式用JSON.parse()来转换类型<br>另一种是设置 <code>dataType</code> 为json，就会自动把result转换为json对象。</p>
-<p>基本上这就可以进行ajax请求了。当然在请求前一定要保证被请求的脚本做好了返回的工作，很多时候<br>没有请求成功都是返回结果出问题了，多用调试窗口看看就好了。</p>
-<h3 id="更多的属性"><a href="#更多的属性" class="headerlink" title="更多的属性"></a>更多的属性</h3><p><code>timeout</code> 设置请求超时时间<br><code>async</code> true就是异步，false是同步，默认是异步，也就是两个ajax之间没有联系，根据实际情况<br>来选择，比如我之前做过下拉加载更多的ajax请求，假如设置为异步，那么可能会发生用户在返回前下拉<br>两次导致请求了两次相同的内容，所以要设置为同步来阻止。<br><code>cache</code> 默认为true（当dataType为script时，默认为false），设置为false将不会从浏览器缓存中加载<br>请求信息。<br><code>beforeSend</code> 接function，发送请求前可以修改XMLHttpRequest对象的函数，例如添加自定义HTTP头。<br>在beforeSend中如果返回false可以取消本次ajax请求。XMLHttpRequest对象是惟一的参数。<br>例如：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">beforeSend: <span class="function"><span class="keyword">function</span>(<span class="params">XMLHttpRequest</span>)</span>&#123;</span><br><span class="line">     <span class="keyword">this</span>;   <span class="comment">//调用本次ajax请求时传递的options参数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p><code>complete</code> 请求完成后调用的函数，不管失败还是成功，success就只是成功才调用，<br>参数：XMLHttpRequest对象和一个描述成功请求类型的字符串。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>(<span class="params">XMLHttpRequest, textStatus</span>)</span>&#123;</span><br><span class="line"><span class="keyword">this</span>;    <span class="comment">//调用本次ajax请求时传递的options参数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p><code>error</code> 请求失败时执行的函数，该函数有3个参数，即XMLHttpRequest对象、错误信息、<br>捕获的错误对象(可选)。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>(<span class="params">XMLHttpRequest, textStatus, errorThrown</span>)</span>&#123;</span><br><span class="line">          <span class="comment">//通常情况下textStatus和errorThrown只有其中一个包含信息</span></span><br><span class="line">          <span class="keyword">this</span>;   <span class="comment">//调用本次ajax请求时传递的options参数</span></span><br><span class="line">         &#125;</span><br></pre></td></tr></table></figure></p>
-<p>还有一些别的因为不太常用就先不介绍了。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/js/">js</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/ajax/">ajax</a><a href="/tags/js/">js</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
+   	       
+	</article>
 	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/03/29/ajax/"  title="ajax的简单复习">
+ <strong>下一篇：</strong><br/> 
+ <span>ajax的简单复习
+</span>
+</a>
 </div>
 
-</footer>
+</nav>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/03/24/helloworld/" title="新手在Github搭建hexo博客" itemprop="url">新手在Github搭建hexo博客</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="lianMo" target="_blank" itemprop="author">lianMo</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-24T14:40:08.000Z" itemprop="datePublished"> 发表于 2016-03-24</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="开始我的博客"><a href="#开始我的博客" class="headerlink" title="开始我的博客"></a>开始我的博客</h1><hr>
-<p>今天跟大神交流了一下，看到他通过Github创建了个人博客，不花钱又省掉管理的麻烦，于是厚着脸皮<br>让他教了我怎么搭建，所以就有了这第一篇博客了。</p>
-<p>首先献上参考链接，大学同学的博客，大神一个: <a href="http://blog.zjy.space" target="_blank" rel="external">http://blog.zjy.space</a></p>
-<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><hr>
-<p>首先你要有Github账号，node.js，git bash<br>注册和安装应用的流程就省略了<br>提供地址<br><a href="https://github.com" target="_blank" rel="external">Github</a> <a href="https://nodejs.org/en/" target="_blank" rel="external">node.js</a> <a href="https://git-scm.com/download/" target="_blank" rel="external">git bash</a></p>
-<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><hr>
-<h3 id="第一步-创建仓库"><a href="#第一步-创建仓库" class="headerlink" title="第一步 创建仓库"></a>第一步 创建仓库</h3><p>在github上创建新的仓库，在输入项目名称时要注意，Repository name这一栏要一下格式填写</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yourusername.github.io</span><br></pre></td></tr></table></figure>
-<p>你的用户名.github.io 这样就可以以网站的形式访问你的github仓库，访问名就是这个。<br>据说之所以能够这样做是github为了给开发者更好地介绍自己的项目特意设置的，注意每个用户<br>只能有一个这样命名和访问的仓库，所以一般拿来搭建个人介绍博客。</p>
-<h3 id="第二步-安装hexo"><a href="#第二步-安装hexo" class="headerlink" title="第二步 安装hexo"></a>第二步 安装hexo</h3><p>首先安装hexo，在命令行输入安装命令，因为是联网安装，而官网会不断更新，所以参考官网最<br>新的命令为标准<br><a href="https://hexo.io/" target="_blank" rel="external">点击这里跳到官网</a><br>等待安装结束<br>然后在自己本地电脑随意地方(路径尽量不要有中文名，虽然我没试过，好像会有问题，同样如果<br>上边的git bash和node.js安装在带中文的路径也会出问题的)建立你的文件夹，名字不需要和仓库<br>名一致，比如我建立的是Gitblog，进入在此处打开git bash(右键 Git Bash here)输入初始化命令<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure></p>
-<p>然后等待初始化结束<br>然后输入<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure></p>
-<p>或者<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure></p>
-<p>就可以生成一个hexo框架的博客了！！接下来我们本地访问一下，开启服务器<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server</span><br></pre></td></tr></table></figure></p>
-<p>或者<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure></p>
-<p>启动服务器后访问 localhost:4000，就能看到这个完全由js和html搭建成的博客了。<br>身为一个只会用php和简单js的渣渣突然觉得真是太神奇了…</p>
-<p>然后以上是顺利的情况，你可能会在中途遇到以下问题(我安装时遇到一些和网上收<br>集到的一些，不齐全请见谅)</p>
-<p>1 在执行安装hexo命令时出错<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! Please <span class="keyword">try</span> running <span class="keyword">this</span> command again <span class="keyword">as</span> root/Administrator.</span><br></pre></td></tr></table></figure></p>
-<p>解决方案：以管理员模式运行cmd</p>
-<p>2 在执行 hexo s 时报错<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR Plugin load failed: hexo-server</span><br></pre></td></tr></table></figure></p>
-<p>原因：没有安装完整<br>解决方案：输入命令<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-server</span><br></pre></td></tr></table></figure></p>
-<h3 id="第三步-部署到github"><a href="#第三步-部署到github" class="headerlink" title="第三步 部署到github"></a>第三步 部署到github</h3><p>在本地博客文件夹根目录找到 <b>_config.yml</b>文件，把<code>deploy</code>一项修改成(<code>repo</code>一项<br>以你个人的用户名为准)：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">type: git</span><br><span class="line">repo: git@github.com:lianMO/lianMO.github.io.git</span><br><span class="line">branch: master</span><br></pre></td></tr></table></figure></p>
-<p><b style="color:red">注意！</b> 在各项的冒号后一定要有空格不然会识别不出来的，</p>
-<p>然后在目录里打开git bash(右键+Git Bash here)，输入命令<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure></p>
-<p><b>注意</b> 有些用户可能在第一次使用github时需要配置一下ssh否则会失败，ssh的<br>设置这里不多说，<a href="https://help.github.com/articles/generating-an-ssh-key/" target="_blank" rel="external">请点击官方</a><br>然后我在这里遇到了一个问题，主要是安装hexo不完整导致的，可供参考。<br>运行<code>hexo d</code>时报错<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo ERROR Deployer not found: git</span><br></pre></td></tr></table></figure></p>
-<p>解决：下载完整该部分<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure></p>
-<p>等待上传完毕后，你就可以看到自己的github仓库已经和本地文件夹联动起来了<br>此后每在本地修改完后就要先运行<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure></p>
-<p>更新本地仓库，检查没错了再上传到github<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure></p>
-<p>到此就已经搭好了hexo博客了</p>
-<h3 id="第四步-添加第一篇博客"><a href="#第四步-添加第一篇博客" class="headerlink" title="第四步 添加第一篇博客"></a>第四步 添加第一篇博客</h3><p>在目录下执行<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new <span class="string">"firstblog"</span></span><br></pre></td></tr></table></figure></p>
-<p>双引号里边是博文标题，请自己决定<br>然后就可以在目录下source-&gt;_posts找到新建的文件 firstblog.md<br>hexo的每一篇博文都是以.md的格式保存，所以需要了解一下<a href="http://www.appinn.com/markdown/" target="_blank" rel="external">markdown的语法</a><br>简单说明一下开头<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 新手在Github搭建hexo博客</span><br><span class="line">date: <span class="number">2016</span><span class="number">-03</span><span class="number">-24</span> <span class="number">22</span>:<span class="number">40</span>:<span class="number">08</span></span><br><span class="line">tags:</span><br><span class="line">- hexo</span><br><span class="line">- Github</span><br><span class="line">category: 教程</span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
-<p>还有别的我还没学就先不介绍了，<code>title</code>是标题，<code>date</code>是发布时间，<code>tags</code>是标签，<br>hexo用于自动检索同标签文章，每个标签以<code>- 标签名</code>注意中间空格，<code>category</code>是分类。<br>开头过后就开始写自己的博客了，除了md语言，也同时支持html和js的使用，实际上直接解析成网页了。<br>所以用不习惯的可以直接打html。</p>
-<p>到此hexo博客搭建教程就结束了。<br>另外引用一下大神同学的话，各位注意一下就好了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo说到底该是基于nodejs,博客中文乱码的时候记得把博客的.md文件转成utf-8格式，还有如果是使用webstorm的，</span><br><span class="line">还要在webstorm转码一次，否则它还是默认用anci编码打开,否则你编辑完保存，md编码又变了</span><br><span class="line">github只提供300m的博客空间，所以为了节省空间，图片都使用图床保存然后接网址过来。</span><br></pre></td></tr></table></figure></p>
-<p>附加常用的hexo命令<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo g == hexo generate</span><br><span class="line">hexo d == hexo deploy</span><br><span class="line">hexo s == hexo server</span><br><span class="line">hexo n == hexo <span class="keyword">new</span></span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/教程/">教程</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/hexo/">hexo</a><a href="/tags/Github/">Github</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
 	
-</div>
 
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-</div>
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于跨域"><span class="toc-number">1.</span> <span class="toc-text">关于跨域</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1）document-domain-iframe的设置"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">1）document.domain+iframe的设置</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2）动态创建script，即jsonp"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">2）动态创建script，即jsonp</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3）利用iframe和location-hash"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">3）利用iframe和location.hash</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#4）window-name实现的跨域数据传输"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">4）window.name实现的跨域数据传输</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#5）使用HTML5-postMessage"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">5）使用HTML5 postMessage</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#6）利用flash"><span class="toc-number">1.0.0.6.</span> <span class="toc-text">6）利用flash</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#7）后台代理"><span class="toc-number">1.0.0.7.</span> <span class="toc-text">7）后台代理</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#8）跨域资源共享（CORS）"><span class="toc-number">1.0.0.8.</span> <span class="toc-text">8）跨域资源共享（CORS）</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-document-domain-iframe的设置"><span class="toc-number">2.</span> <span class="toc-text">1. document.domain+iframe的设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-动态创建script，即jsonp"><span class="toc-number">3.</span> <span class="toc-text">2. 动态创建script，即jsonp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-利用iframe和location-hash"><span class="toc-number">4.</span> <span class="toc-text">3. 利用iframe和location.hash</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#hash-属性是一个可读可写的字符串，该字符串是-URL-的锚部分（从-号开始的部分）。"><span class="toc-number">4.0.1.</span> <span class="toc-text">hash 属性是一个可读可写的字符串，该字符串是 URL 的锚部分（从 # 号开始的部分）。</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-window-name实现的跨域数据传输"><span class="toc-number">5.</span> <span class="toc-text">4.window.name实现的跨域数据传输</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-使用html5-postMessage"><span class="toc-number">6.</span> <span class="toc-text">5. 使用html5 postMessage</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-利用flash"><span class="toc-number">7.</span> <span class="toc-text">6. 利用flash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-后台代理"><span class="toc-number">8.</span> <span class="toc-text">7. 后台代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-跨域资源共享（CORS）"><span class="toc-number">9.</span> <span class="toc-text">8. 跨域资源共享（CORS）</span></a></li></ol>
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -531,12 +392,89 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
 
 
 
@@ -607,4 +545,4 @@ var _hmt = _hmt || [];
 <!-- Tiny_search End -->
 
   </body>
- </html>
+</html>
