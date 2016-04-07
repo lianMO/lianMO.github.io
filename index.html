@@ -81,6 +81,78 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/04/07/csrfattack/" title="CSRF跨域伪造攻击" itemprop="url">CSRF跨域伪造攻击</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="lianMo" target="_blank" itemprop="author">lianMo</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-07T11:33:24.000Z" itemprop="datePublished"> 发表于 2016-04-07</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>上年去面试时被问到跨域攻击的方式及防范方法，只知道攻击方式却不知道防范方式，<br>所以决定来学一下。</p>
+<h4 id="什么是CSRF？"><a href="#什么是CSRF？" class="headerlink" title="什么是CSRF？"></a>什么是CSRF？</h4><p>CSRF（Cross-site request forgery），中文名称：跨站请求伪造，也被称为：one click attack/session riding，缩写为：CSRF/XSRF。<br>也就是在用户会话下对某个CGI做一些GET/POST的事情——这些事情用户未必知道和愿意做，你可以把它想做HTTP会话劫持。</p>
+<h4 id="CSRF的原理"><a href="#CSRF的原理" class="headerlink" title="CSRF的原理"></a>CSRF的原理</h4><p>参考<a href="http://www.cnblogs.com/hyddd/archive/2009/04/09/1432744.html" target="_blank" rel="external">这篇博客</a>后,可以看到<br><img src="http://pic002.cnblogs.com/img/hyddd/200904/2009040916453171.jpg"><br>恶意网站通过在自己网站写伪造的请求，并在用户访问恶意网站的同时发送请求，这样正常网站就<br>误以为该请求来自与用户，从而执行了请求。</p>
+<h6 id="示例-1"><a href="#示例-1" class="headerlink" title="示例 1."></a>示例 1.</h6><p>银行网站A，它以GET请求来完成银行转账的操作，如：<a href="http://www.mybank.com/Transfer.php?toBankId=11&amp;money=1000" target="_blank" rel="external">http://www.mybank.com/Transfer.php?toBankId=11&amp;money=1000</a><br>危险网站B，它里面有一段HTML的代码如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=<span class="string">'http://www.mybank.com/Transfer.php?toBankId=11&amp;money=1000'</span>&gt;</span><br></pre></td></tr></table></figure></p>
+<p>首先，你登录了银行网站A，然后访问危险网站B，在访问B时由于B上边的恶意代码，浏览器在加载<br>img的src时会发送一个请求(原本是请求图片内容，结果被利用了)，而由于请求是通过用户本地浏<br>览器发送的，网站A就误以为该请求时用户自己发出的正常请求，所以就执行了，然后用户账号就被<br>扣了1000块了。</p>
+<h5 id="示例2"><a href="#示例2" class="headerlink" title="示例2."></a>示例2.</h5><p>以上攻击基于A网站使用GET传参数，但是实际应用中一般使用POST保安全，然而一样是有攻击方式的</p>
+<p>网站A改造成POST传参<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">　　　　session_start();</span><br><span class="line">　　　　<span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'toBankId'</span>] &amp;&amp;　<span class="keyword">isset</span>($_POST[<span class="string">'money'</span>]))</span><br><span class="line">　　　　&#123;</span><br><span class="line">　　　　    buy_stocks($_POST[<span class="string">'toBankId'</span>],　$_POST[<span class="string">'money'</span>]);</span><br><span class="line">　　　　&#125;</span><br><span class="line">　　<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>网站B对应改成针对post的攻击<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">　　&lt;head&gt;</span><br><span class="line">　　　　&lt;script type="text/javascript"&gt;</span><br><span class="line">　　　　　　function steal()</span><br><span class="line">　　　　　　&#123;</span><br><span class="line">          　　　　 iframe = document.frames["steal"];</span><br><span class="line">　　     　　      iframe.document.Submit("transfer");</span><br><span class="line">　　　　　　&#125;</span><br><span class="line">　　　　&lt;/script&gt;</span><br><span class="line">　　&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">　　&lt;body onload=<span class="string">"steal()"</span>&gt;</span><br><span class="line">　　　　&lt;iframe name="steal" display="none"&gt;</span><br><span class="line">　　　　　　&lt;form method="POST" name="transfer"　action="http://www.myBank.com/Transfer.php"&gt;</span><br><span class="line">　　　　　　　　&lt;input type="hidden" name="toBankId" value="11"&gt;</span><br><span class="line">　　　　　　　　&lt;input type="hidden" name="money" value="1000"&gt;</span><br><span class="line">　　　　　　&lt;/form&gt;</span><br><span class="line">　　　　&lt;/iframe&gt;</span><br><span class="line">　　&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这样B网站通过iframe构建一个form来提交表单，同样骗过了浏览器和A网站，达到了跨域攻击的目的</p>
+<p>总结：<br>CSRF攻击是源于WEB的隐式身份验证机制！WEB的身份验证机制虽然可以保证一个请求是来自于某个用户的浏览器，但却无法保证该请求是用户批准发送的！</p>
+<h4 id="CSRF的防御"><a href="#CSRF的防御" class="headerlink" title="CSRF的防御"></a>CSRF的防御</h4><p>从上边的例子可以看到要防御CSRF攻击，可以从客户端和服务器端两边入手。</p>
+<p>(1)增加伪随机数<br>使用伪随机数是现在比较简单和普遍的做法，即使是GET这样不安全的方法也因为伪随机数的引入而变得<br>可采用。其原理就是在传参数时添加多一项随机数来验证该请求是否来源于真实用户，而不仅仅只需要<br>执行逻辑业务的参数。<br>服务器端在用户访问/登录时通过session/cookie保存一个随机数用户后续的验证。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">　　　　<span class="comment">//构造加密的Cookie信息</span></span><br><span class="line">　　　　$value = rand(<span class="number">10000</span>,<span class="number">99999</span>);</span><br><span class="line">　　　　setcookie(”token”, $value, time()+<span class="number">3600</span>);<span class="comment">//或者session("token",$value)</span></span><br><span class="line">　　<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>然后客户端提交表单的同时把随机数也传过去<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">　　　　$hash = md5($_COOKIE[<span class="string">'token'</span>]);<span class="comment">//或者$_SESSION['token']</span></span><br><span class="line">　　?&gt;</span><br><span class="line">　　&lt;form method=”POST” action=”transfer.php”&gt;</span><br><span class="line">　　　　&lt;input type=”text” name=”toBankId”&gt;</span><br><span class="line">　　　　&lt;input type=”text” name=”money”&gt;</span><br><span class="line">　　　　&lt;input type=”hidden” name=”hash” value=”&lt;?=$hash;?&gt;”&gt; </span><br><span class="line">　　　　&lt;input type=”submit” name=”submit” value=”Submit”&gt;</span><br><span class="line">　　&lt;/form&gt;</span><br></pre></td></tr></table></figure></p>
+<p>服务器端受到请求就会进行随机数验证才通过请求。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">　　      <span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'hash'</span>])) &#123;</span><br><span class="line">     　　      $hash = md5($_COOKIE[<span class="string">'token'</span>]);<span class="comment">//或者md5($_SESSION['token'])</span></span><br><span class="line">          　　 <span class="keyword">if</span>($_POST[<span class="string">'hash'</span>] == $hash) &#123;</span><br><span class="line">               　　 doJob();</span><br><span class="line">　　           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">　　　　　　　　<span class="comment">//...</span></span><br><span class="line">          　　 &#125;</span><br><span class="line">　　      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">　　　　　　<span class="comment">//...</span></span><br><span class="line">　　      &#125;</span><br><span class="line">      <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>这样就能确认该请求是真实用户发出来的了。一般而言这种方法就能拦截大部分的CSRF攻击。<br>但是不排除恶意网站会盗取cookie或者强硬破解随机数的做法。</p>
+<p>(2)验证码<br>在用户需要提交请求的地方都设置需要填入验证码才可以的方法虽然有效但是过于麻烦，可以<br>用于一些安全需求很高的地方。</p>
+<p>(3)前一页的链接<br>服务器端是可以通过sever对象的referer来知道请求时来源于哪个网站哪个页面链接的，一般网站都是同<br>主域的，所以也可以通过查询用户前一页，即从哪里发送请求过来的方法验证请求是否来源安全，<br>然而这种方法可以通过伪造修改httprequest来破解。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(eregi(<span class="string">"www.playhack.net"</span>, $_SERVER[<span class="string">'HTTP_REFERER'</span>])) &#123;</span><br><span class="line">     do_something();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">     <span class="keyword">echo</span> <span class="string">"Malicious Request!"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>CSRF攻击很简单就能实现，因此防御方式也是比较多和实用的，在平常做项目时<br>也要多留意一下这些方面不要留下漏洞给人钻，安全问题虽然我现在还没有怎么研究<br>但是一定是一个不可避免的课题。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/网站安全/">网站安全</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/03/31/crossfield/" title="网页的跨域访问处理" itemprop="url">网页的跨域访问处理</a>
   </h1>
   <p class="article-author">By
@@ -391,6 +463,10 @@ PHP：只需要使用如下的代码设置即可。
 		
 			
 				<li><a href="/tags/ajax/" title="ajax">ajax<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/网站安全/" title="网站安全">网站安全<sup>1</sup></a></li>
 			
 		
 			
