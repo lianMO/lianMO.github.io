@@ -167,7 +167,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2016/03/24/helloworld/" data-title="新手在Github搭建hexo博客 | MZJ的博客" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2016/03/24/helloworld/" data-title="新手在Github搭建hexo博客 | MZJ的博客" data-tsina="undefined" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -208,6 +208,13 @@
 <aside class="clearfix">
 
   
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="https://github.com/lianMo" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
 
 
   
@@ -237,11 +244,15 @@
 			
 		
 			
-				<li><a href="/tags/网站安全/" title="网站安全">网站安全<sup>1</sup></a></li>
+				<li><a href="/tags/js/" title="js">js<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/跨域/" title="跨域">跨域<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/网站安全/" title="网站安全">网站安全<sup>1</sup></a></li>
 			
 		
 			
@@ -250,10 +261,6 @@
 		
 			
 				<li><a href="/tags/Github/" title="Github">Github<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/js/" title="js">js<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -279,16 +286,9 @@
     </ul>
 </div>
 
-  
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
-</div>
-
   <div class="weiboshow">
   <p class="asidetitle">新浪微博</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=b3593ceb&dpc=1"></iframe>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=undefined&verifier=b3593ceb&dpc=1"></iframe>
 </div>
 
 
@@ -312,6 +312,8 @@
 		
 		<a href="http://weibo.com/3904284832" target="_blank" class="icon-weibo" title="微博"></a>
 		
+		
+		<a href="https://github.com/https://github.com/lianMo" target="_blank" class="icon-github" title="github"></a>
 		
 		
 		
@@ -424,10 +426,6 @@ $(document).ready(function(){
   var html = [
   '<div class="hoverqrcode clearfix"></div>',
   '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
   '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
   '<span title="Share to"></span>'
   ].join('');
@@ -496,16 +494,6 @@ $(document).ready(function(){
 <!-- Analytics Begin -->
 
 
-
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
 
 
 
