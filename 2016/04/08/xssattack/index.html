@@ -23,7 +23,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20141205153514671">
 <meta property="og:image" content="http://img.blog.csdn.net/20141205154702687">
 <meta property="og:image" content="http://img.blog.csdn.net/20141205154518194">
-<meta property="og:updated_time" content="2016-04-08T09:23:41.621Z">
+<meta property="og:updated_time" content="2016-04-08T09:27:02.563Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="xss攻击">
 <meta name="twitter:description" content="继续来研究一下网站安全的工作，这次要介绍的是xss，跨站脚本攻击(Cross Site Scripting)。
@@ -119,25 +119,7 @@
 <p>当用户d和用户c浏览黑客b的博文时，他们的cookie就被盗取了。因为该博文包含了盗取cookie的脚本，<br>在加载页面式该命令也被执行了。<br>只要管理员不发现没有删除这篇博文，那么只要有人访问就会触发攻击。所以危险比DOM Based XSS还要大。</p>
 <h3 id="XSS的防御"><a href="#XSS的防御" class="headerlink" title="XSS的防御"></a>XSS的防御</h3><h5 id="建立完整的过滤体系"><a href="#建立完整的过滤体系" class="headerlink" title="建立完整的过滤体系"></a>建立完整的过滤体系</h5><p>对一切可变的，用户输入的东西都要进行过滤，假如有不能删减改变的则使用转义符号的方法替代特殊字符，<br>毕竟恶意代码也只是代码，破坏了代码结构就无法工作了。</p>
 <p>Html encode<br>       假如某些情况下，我们不能对用户数据进行严格的过滤，那我们也需要对标签进行转换。</p>
-<p><table></table></p>
-<p><tr></tr></p>
-<p><td>less-than character (&lt;)</td></p>
-<p><td>&lt;</td><br></p>
-<p><tr></tr></p>
-<p><td>greater-than character (&gt;) </td></p>
-<p><td>&gt;</td><br></p>
-<p><tr></tr></p>
-<p><td>ampersand character (&amp;) </td></p>
-<p><td>&amp;</td><br></p>
-<p><tr></tr></p>
-<p><td>double-quote character (“)</td></p>
-<p><td>&quot;</td><br></p>
-<p><tr></tr></p>
-<p><td>space character( )</td></p>
-<p><td>&nbsp;</td><br></p>
-<p><tr></tr></p>
-<p><td>Any ASCII code character whose code is greater-than or equal to 0x80</td></p>
-<p><td>&amp;#<number>, where <number> is the ASCII character value.</number></number></td><br><br><br>这样即使黑客注入了脚本也会被转义成无效的字符串。比如用户输入：<script>window.location.href=”<a href="http://www.baidu.com”">http://www.baidu.com”</a>;</script>，保存后最终存储的会是：&lt;script&gt;window.location.href=&quot;<a href="http://www.baidu.com&quot;&lt;/script&gt;在展现时浏览器会对这些字符转换成文本内容显示，而不是一段可执行的代码。" target="_blank" rel="external">http://www.baidu.com&quot;&lt;/script&gt;在展现时浏览器会对这些字符转换成文本内容显示，而不是一段可执行的代码。</a></p>
+<p><table border="1" cellspacing="0" cellpadding="0" width="675" style="background:#F2F9FF"><tbody><tr><td valign="top"><p align="left"><span style="color:#2E2E2E">less-than character (&lt;)</span></p></td><td valign="top"><p align="left"><span style="color:#2E2E2E">&amp;lt;</span></p></td></tr><tr><td valign="top"><p align="left"><span style="color:#2E2E2E">greater-than character (&gt;)</span></p></td><td valign="top"><p align="left"><span style="color:#2E2E2E">&amp;gt;</span></p></td></tr><tr><td valign="top"><p align="left"><span style="color:#2E2E2E">ampersand character (&amp;)</span></p></td><td valign="top"><p align="left"><span style="color:#2E2E2E">&amp;amp;</span></p></td></tr><tr><td valign="top"><p align="left"><span style="color:#2E2E2E">double-quote character (“)</span></p></td><td valign="top"><p align="left"><span style="color:#2E2E2E">&amp;quot;</span></p></td></tr><tr><td valign="top"><p align="left"><span style="color:#2E2E2E">space character( )</span></p></td><td valign="top"><p align="left"><span style="color:#2E2E2E">&amp;nbsp;</span></p></td></tr><tr><td valign="top"><p align="left"><span style="color:#2E2E2E">Any ASCII code character whose code is greater-than or equal to 0x80</span></p></td><td valign="top"><p align="left"><span style="color:#2E2E2E">&amp;#&lt;number&gt;, where &lt;number&gt; is the ASCII character value.</span></p></td></tr></tbody></table><br>这样即使黑客注入了脚本也会被转义成无效的字符串。比如用户输入：<script>window.location.href=”<a href="http://www.baidu.com”">http://www.baidu.com”</a>;</script>，保存后最终存储的会是：&lt;script&gt;window.location.href=&quot;<a href="http://www.baidu.com&quot;&lt;/script&gt;在展现时浏览器会对这些字符转换成文本内容显示，而不是一段可执行的代码。" target="_blank" rel="external">http://www.baidu.com&quot;&lt;/script&gt;在展现时浏览器会对这些字符转换成文本内容显示，而不是一段可执行的代码。</a></p>
 <p>过滤的工作要考虑全面，不仅在输入时过滤，输出时，从GET参数赋值时都要考虑过滤的问题，<br>没有漏洞就大大减少攻击的风险。</p>
 <p>补充：<br><a href="http://lobert.iteye.com/blog/2164741" target="_blank" rel="external">这篇博客</a>提到了一个配置可以阻止浏览器通过js来获取cookie的行为。<br>从而防止黑客盗取用户的cookie。这里就引用一下：</p>
 <p>HttpOnly防止劫取Cookie<br>HttpOnly最早由微软提出，至今已经成为一个标准。浏览器将禁止页面的Javascript访问带有HttpOnly属性的Cookie。目前主流浏览器都支持，HttpOnly解决是XSS后的Cookie支持攻击。</p>
@@ -242,11 +224,11 @@
 			
 		
 			
-				<li><a href="/tags/跨域/" title="跨域">跨域<sup>1</sup></a></li>
+				<li><a href="/tags/js/" title="js">js<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/js/" title="js">js<sup>1</sup></a></li>
+				<li><a href="/tags/跨域/" title="跨域">跨域<sup>1</sup></a></li>
 			
 		
 			
