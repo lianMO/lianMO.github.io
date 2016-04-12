@@ -81,6 +81,93 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/04/11/review/" title="鹅厂一面问题总结" itemprop="url">鹅厂一面问题总结</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="lianMo" target="_blank" itemprop="author">lianMo</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-11T14:23:29.000Z" itemprop="datePublished"> 发表于 2016-04-11</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>昨天被鹅厂一面了，在看着动画时突然打电话来面试，为什么只有我是电话面试的…..<br>算了反正都面试过了，到写下这篇博客时查询状态还是查无结果，难道我的记录消失在宇宙中了吗….<br>算了就算挂了也算是一次经验的积累，不过昨天实在紧张到懵逼了，有好几个问题都会的却漏答了…<br>算了还是先来总结一下吧，自己会的和不会的估计各占一半吧，猜测是电话面试的原因，没有怎么让我<br>展开自己的项目而是一直在问基础，好吧，因面试官而异，废话差不多了，进入正题。</p>
+<h4 id="1-js的面向对象编程思想"><a href="#1-js的面向对象编程思想" class="headerlink" title="1.js的面向对象编程思想"></a>1.js的面向对象编程思想</h4><p>这个我没有答好…因为没抓住面试官的意图，臆测要回答得很高端的，于是乱来了….<br>实际上就是考面向对象编程的思想，从封装性，继承性，多态性方面展开讲，以及把所有逻辑当作<br>对象处理的思想。</p>
+<h4 id="2-DOM的属性"><a href="#2-DOM的属性" class="headerlink" title="2.DOM的属性"></a>2.DOM的属性</h4><p>这个也是懵逼了，一时间答不上来…<br>document.title //设置文档标题等价于HTML的title标签<br>document.bgColor //设置页面背景色<br>document.fgColor //设置前景色(文本颜色)<br>document.linkColor //未点击过的链接颜色<br>document.alinkColor //激活链接(焦点在此链接上)的颜色<br>document.vlinkColor //已点击过的链接颜色<br>document.URL //设置URL属性从而在同一窗口打开另一网页<br>document.fileCreatedDate //文件建立日期，只读属性<br>document.fileModifiedDate //文件修改日期，只读属性<br>document.charset //设置字符集 简体中文:gb2312<br>document.fileSize //文件大小，只读属性<br>document.cookie //设置和读出cookie<br>document.referrer //读出前一页的URL</p>
+<p>常用对象方法</p>
+<p>document.write() //动态向页面写入内容<br>document.createElement(Tag) //创建一个html标签对象<br>document.getElementById(ID) //获得指定ID值的对象<br>document.getElementsByName(Name) //获得指定Name值的对象集合<br>document.getElementsByTagName(Tag) //获得指定tag值的对象集合<br>document.body.appendChild(oTag)</p>
+<h4 id="3-获取DOM的方法"><a href="#3-获取DOM的方法" class="headerlink" title="3.获取DOM的方法"></a>3.获取DOM的方法</h4><p>document.getElementById(ID)<br>document.getElementsByName(Name)<br>document.getElementsByTagName(Tag)</p>
+<p>jq的方法<br>$(selector)  // 多对象可以通过 $(selector)[1] $(selector).toArray() $(selector).get(1)来获得</p>
+<p>等下拓展一下get()方法因为后边有个问题也用到了。</p>
+<p>html5新增的方法</p>
+<p>document.getElementsByClassName(class)</p>
+<p>querySelector()方法 ：接收一个CSS选择符 ，返回与该模式匹配的第一个元素，若没有匹配到返回null。<br>其中通过Document类型调用querySelector()方法时，会在文档元素范围内查找匹配元素；<br>如var body =  document.querySelector(“body”);<br>通过Element类型调用querySelector()时，只会在该元素后代元素的范围内查找匹配元素<br>如var img = document.body.querySelector(“img.button”);</p>
+<p>querySelectorAll()方法 ：接收一个CSS选择符 ，返回与该模式匹配的所有元素，返回一个Nodelist实例（类Array）若没有匹配到返回null。<br>所以可以使用Array的一些熟悉如item() [] length</p>
+<p>matchesSelector()方法：接收一个css选择符，如果调用元素与该选择符匹配，返回true。否则返回false.</p>
+<h4 id="4-jq获得的对象是否原生的DOM对象"><a href="#4-jq获得的对象是否原生的DOM对象" class="headerlink" title="4. jq获得的对象是否原生的DOM对象"></a>4. jq获得的对象是否原生的DOM对象</h4><p>否定。<br>jQuery 对象是通过 jQuery 包装DOM 对象后产生的对象。jQuery 对象是 jQuery 独有的，其可以使用 jQuery 里的方法，但是不能使用 DOM 的方法；例如： $(“#img”).attr(“src”,”test.jpg”); 这里的 $(“#img”)就是 jQuery 对象。<br>DOM对象就是Javascript 固有的一些对象操作。DOM 对象能使用Javascript 固有的方法，但是不能使用 jQuery 里的方法。例如：document.getElementById(“img”).src = “test.jpg”；这里的document.getElementById(“img”) 就是DOM 对象。<br>$(“#img”).attr(“src”,”test.jpg”); 和 document.getElementById(“img”).src = “test.jpg”; 是等价的，是正确的，但是 $(“#img”).src = “test.jpg” ；或者 document.getElementById(“img”).attr(“src”,”test.jpg”); 都是错误的。</p>
+<h4 id="5-jq获得的DOM对象与原生DOM对象的转换"><a href="#5-jq获得的DOM对象与原生DOM对象的转换" class="headerlink" title="5. jq获得的DOM对象与原生DOM对象的转换"></a>5. jq获得的DOM对象与原生DOM对象的转换</h4><p>这个不会啊，之前没接触过….<br>对于已经是一个 DOM 对象，只需要用 $() 把DOM对象包装起来，就可以获得一个 jQuery 对象了，使用[index]和.get(index)可以转为DOM对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> dom1 = <span class="built_in">document</span>.getElementById(<span class="string">'id1'</span>);</span><br><span class="line"><span class="keyword">var</span> jq1 = $(<span class="string">"#id2"</span>);</span><br><span class="line"><span class="keyword">var</span> dom2 = jq1.get(<span class="number">0</span>) <span class="comment">// 或者 jq1[0] jq1.get()[0]</span></span><br><span class="line"><span class="keyword">var</span> jq2 = $(dom1)</span><br></pre></td></tr></table></figure>
+<p>注意在jq中不带DOM的get是类似于ajax的缩写方式，官方描述：<b>使用一个HTTP GET请求从服务器加载数据。</b></p>
+<p>jQuery.get( url [, data ] [, success(data, textStatus, jqXHR) ] [, dataType ] )</p>
+<p>url<br>类型: String<br>一个包含发送请求的URL字符串<br>data<br>类型: PlainObject, String<br>发送给服务器的字符串或Key/value键值对。<br>success(data, textStatus, jqXHR)<br>类型: Function()<br>当请求成功后执行的回调函数。 如果提供dataType选项，那么这个success选项是必须的， 但你可以使用null或jQuery.noop作为占位符。<br>dataType<br>类型: String<br>从服务器返回的预期的数据类型。默认：智能猜测（xml, json, script, 或 html）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$.get(<span class="string">'ajax/test.html'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">  $(<span class="string">'.result'</span>).html(data);</span><br><span class="line">  alert(<span class="string">'Load was performed.'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//效果与ajax相同</span></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">  url: <span class="string">'ajax/test.html'</span>,</span><br><span class="line">  type：get,  </span><br><span class="line">  success: <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123; $(<span class="string">'.result'</span>).html(data);</span><br><span class="line">                             alert(<span class="string">'Load was performed.'</span>);&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="6-js的数据类型"><a href="#6-js的数据类型" class="headerlink" title="6. js的数据类型"></a>6. js的数据类型</h4><p>这个也是紧张到懵逼忘记了布尔，数组和对象…<br>字符串、数字、布尔、数组、对象、Null、Undefined</p>
+<h4 id="7-js的原型的概念"><a href="#7-js的原型的概念" class="headerlink" title="7. js的原型的概念"></a>7. js的原型的概念</h4><p>没有发挥好…明明脑子里知道是什么却没法很好地表达，不知道对方get到多少了…<br>因为js是面向对象的编程，所以每个东西都是一个对象，相对于java的object基类，js就是原型，<br>原型对象可以看做是一个类，定义了实例化的对象具有的属性和函数。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>)</span>&#123;&#125; <span class="comment">//定义一个构造函数就有一种新的类，每种类都有一个prototype</span></span><br><span class="line">A.prototype.show = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; <span class="comment">//do something&#125; //给这个类绑定函数</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> A();</span><br><span class="line">a.show(); <span class="comment">// 这类的实例化对象可以使用原型的函数。</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="8-js的Number数据和对象Object的区别"><a href="#8-js的Number数据和对象Object的区别" class="headerlink" title="8. js的Number数据和对象Object的区别"></a>8. js的Number数据和对象Object的区别</h4><p>Number虽然是基本数据类型，但很明显也是一种类，那么跟Object类型的数据又有什么区别呢？<br>为什么在数据类型划分时要分开？<br>这个我没有考虑过也就没有答好，只能糊弄的说一个是系统自带的类一个是专指自定义的。感觉应该不对。</p>
+<p>w3c上有这样一段话：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">在 JavaScript 中，数字是一种基本的数据类型。JavaScript 还支持 Number 对象，</span><br><span class="line">该对象是原始数值的包装对象。在必要时，JavaScript 会自动地在原始数据和对象之间转换。</span><br><span class="line">在 JavaScript 1.1 中，可以用构造函数 Number() 明确地创建一个 Number 对象，</span><br><span class="line">尽管这样做并没有什么必要。</span><br></pre></td></tr></table></figure></p>
+<p>只能说数值型数据也是对象，但是是经过拓展的新的类型，Number对象，也就是子类不等于父类，<br>但是来源于父类。</p>
+<h4 id="9-php-的require-和-require-once-的区别和各自的优势"><a href="#9-php-的require-和-require-once-的区别和各自的优势" class="headerlink" title="9. php 的require() 和 require_once()的区别和各自的优势"></a>9. php 的require() 和 require_once()的区别和各自的优势</h4><p>区别很简单，require会引起重复引用的问题，require_once()只引用一次，防止出错。<br>但是优势了….当时没怎么想象就放弃了，真实失策啊…明明联想一下C++的预编译就行了。<br>类似于预编译的效率问题，require不需要查找重复项效率高，require_once就效率低了</p>
+<p>所以正确回答是根据场景不同使用不同方法，在单一引用确定没有重复引用时使用require提高效率<br>如果有重复引用就用require_once防止出错。</p>
+<h4 id="10-php-连接-mysql"><a href="#10-php-连接-mysql" class="headerlink" title="10. php 连接 mysql"></a>10. php 连接 mysql</h4><p>记忆开始模糊了，就记得这么多了…<br>这个就没什么了，只是没听清他问的是具体到连接数据库还是只需要连接mysql….<br>又没有重复确认，电话面试好难听清楚啊…..所以各位一定要冷静可以大胆复述问题确认没有听错。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$conn = mysql_connect(severaddress,username,password); <span class="comment">//连接到mysql</span></span><br><span class="line">mysql_select_db(dbname,$conn); <span class="comment">//连接到具体数据库</span></span><br></pre></td></tr></table></figure></p>
+<p>拓展，查了w3c还有两个参数可以用，但是不影响连接成功，但是一般考虑安全可能需要用到，<br>估计我没答上来就被扣分了吧…..<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_connect(server,user,pwd,newlink,clientflag);<span class="comment">//newlink 和clientflag以前没关注过下面解释</span></span><br></pre></td></tr></table></figure></p>
+<tr><br>    <td>参数</td><br>    <td>描述</td><br>  </tr><br>  <tr><br>    <td>server</td><br>    <td><br>    <p>可选。规定要连接的服务器。</p><br>    <p>可以包括端口号，例如 “hostname:port”，或者到本地套接字的路径，例如对于 localhost 的 “:/path/to/socket”。</p><br>    <p>如果 PHP 指令 mysql.default_host 未定义（默认情况），则默认值是 ‘localhost:3306’。</p><br>    </td><br>  </tr><br>  <tr><br>    <td>user</td><br>    <td>可选。用户名。默认值是服务器进程所有者的用户名。</td><br>  </tr><br>  <tr><br>    <td>pwd</td><br>    <td>可选。密码。默认值是空密码。</td><br>  </tr><br>  <tr><br>    <td>newlink</td><br>    <td>可选。如果用同样的参数第二次调用 mysql_connect()，将不会建立新连接，而将返回已经打开的连接标识。参数 new_link 改变此行为并使 mysql_connect() 总是打开新的连接，甚至当 mysql_connect() 曾在前面被用同样的参数调用过。</td><br>  </tr><br>  <tr><br>    <td>clientflag</td><br>    <td><br>    <p>可选。client_flags 参数可以是以下常量的组合：</p><br>    <ul class="listintable"><br>        <li>MYSQL_CLIENT_SSL - 使用 SSL 加密</li><br>        <li>MYSQL_CLIENT_COMPRESS - 使用压缩协议</li><br>        <li>MYSQL_CLIENT_IGNORE_SPACE - 允许函数名后的间隔</li><br>        <li>MYSQL_CLIENT_INTERACTIVE - 允许关闭连接之前的交互超时非活动时间</li><br>    </ul><br>    </td><br>  </tr>
+
+
+<p>可能还有遗漏等我想起就补上吧，现在还没有消息估计是没戏了，叹一声长气，唉~~~~</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/面试/">面试</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/04/08/xssattack/" title="xss攻击" itemprop="url">xss攻击</a>
   </h1>
   <p class="article-author">By
@@ -546,6 +633,10 @@ PHP：只需要使用如下的代码设置即可。
 		
 			
 				<li><a href="/tags/网站安全/" title="网站安全">网站安全<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/面试/" title="面试">面试<sup>1</sup></a></li>
 			
 		
 			
