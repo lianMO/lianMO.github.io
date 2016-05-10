@@ -1,0 +1,514 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>javascript的变量提升和函数提升 | MZJ的博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="lianMo">
+    
+
+    
+    <meta name="description" content="今天又被教了新东西而且是很有趣的东西，那就是js的变量提升和函数提升，在很多面试和笔试时都会碰到，所以来研究一下。
+在说明什么是变量提升和函数提升(Hoisting)前先来看看几个例子：
+12var in_window = &quot;a&quot; in window; console.log(in_window);
+猜猜会输出什么。接着下一个例子:1234var in_window = &quot;a&quot; in window">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javascript的变量提升和函数提升">
+<meta property="og:url" content="http://yoursite.com/2016/04/17/jsfunctionup/index.html">
+<meta property="og:site_name" content="MZJ的博客">
+<meta property="og:description" content="今天又被教了新东西而且是很有趣的东西，那就是js的变量提升和函数提升，在很多面试和笔试时都会碰到，所以来研究一下。
+在说明什么是变量提升和函数提升(Hoisting)前先来看看几个例子：
+12var in_window = &quot;a&quot; in window; console.log(in_window);
+猜猜会输出什么。接着下一个例子:1234var in_window = &quot;a&quot; in window">
+<meta property="og:updated_time" content="2016-04-17T08:29:09.784Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="javascript的变量提升和函数提升">
+<meta name="twitter:description" content="今天又被教了新东西而且是很有趣的东西，那就是js的变量提升和函数提升，在很多面试和笔试时都会碰到，所以来研究一下。
+在说明什么是变量提升和函数提升(Hoisting)前先来看看几个例子：
+12var in_window = &quot;a&quot; in window; console.log(in_window);
+猜猜会输出什么。接着下一个例子:1234var in_window = &quot;a&quot; in window">
+
+    
+    <link rel="alternative" href="/atom.xml" title="MZJ的博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="MZJ的博客" title="MZJ的博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="MZJ的博客">MZJ的博客</a></h1>
+				<h2 class="blog-motto">make dream</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/17/jsfunctionup/" title="javascript的变量提升和函数提升" itemprop="url">javascript的变量提升和函数提升</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="lianMo" target="_blank" itemprop="author">lianMo</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-17T06:20:48.000Z" itemprop="datePublished"> 发表于 2016-04-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-作用域"><span class="toc-number">1.</span> <span class="toc-text">1. 作用域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-变量提升"><span class="toc-number">2.</span> <span class="toc-text">2.变量提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-函数提升"><span class="toc-number">3.</span> <span class="toc-text">3.函数提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-变量提升与函数提升的比较"><span class="toc-number">4.</span> <span class="toc-text">4.变量提升与函数提升的比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+		
+		</div>
+		
+		<p>今天又被教了新东西而且是很有趣的东西，那就是js的变量提升和函数提升，<br>在很多面试和笔试时都会碰到，所以来研究一下。</p>
+<p>在说明什么是变量提升和函数提升(Hoisting)前先来看看几个例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> in_window = <span class="string">"a"</span> <span class="keyword">in</span> <span class="built_in">window</span>; </span><br><span class="line"><span class="built_in">console</span>.log(in_window);</span><br></pre></td></tr></table></figure>
+<p>猜猜会输出什么。接着下一个例子:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> in_window = <span class="string">"a"</span> <span class="keyword">in</span> <span class="built_in">window</span>; </span><br><span class="line"><span class="built_in">console</span>.log(in_window); </span><br><span class="line"><span class="keyword">if</span>(!(<span class="string">"a"</span> <span class="keyword">in</span> <span class="built_in">window</span>)) </span><br><span class="line">&#123; <span class="keyword">var</span> a = <span class="number">1</span>; &#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后一个:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a; </span><br><span class="line"><span class="keyword">var</span> in_window = <span class="string">"a"</span> <span class="keyword">in</span> <span class="built_in">window</span>; </span><br><span class="line"><span class="built_in">console</span>.log(in_window); </span><br><span class="line"><span class="keyword">if</span>(!(<span class="string">"a"</span> <span class="keyword">in</span> <span class="built_in">window</span>)) &#123; a = <span class="number">1</span>; &#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果是输出 false,true,true,如果没有了解过js的变量提升估计会看晕，比如我，<br>但是实际上掌握了就不难理解了。出现以上现象的关键js代码遵循了声明提升的原则。<br>所有变量(包括函数)都会被提升到作用域的顶部作声明，也就是说在上面的例子2中a的声明<br>跑到顶部上了相当于例子3那样。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">var</span> a=<span class="string">'One'</span>; </span><br><span class="line"><span class="keyword">var</span> b=<span class="string">'Two'</span>; </span><br><span class="line"><span class="keyword">var</span> c=<span class="string">'Three'</span>; </span><br><span class="line">&lt;/script&gt;</span><br><span class="line"><span class="comment">//实际上相当于</span></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">var</span> a,b,c;</span><br><span class="line">a=<span class="string">'One'</span>;</span><br><span class="line">b=<span class="string">'Two'</span>;</span><br><span class="line">c=<span class="string">'Three'</span>;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>这是js的内部机制决定的，我们没法改变所以在实际使用中一定要注意。</p>
+<h3 id="1-作用域"><a href="#1-作用域" class="headerlink" title="1. 作用域"></a>1. 作用域</h3><p>在实际讨论提升问题前先要弄清楚js的作用域的问题。js的作用域不同于C语言，在<br>C家族编程语言中，变量是遵循块作用域(block-level scope)的，看一下例子<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span>  </span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">1</span>;  </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d, "</span>, x); <span class="comment">// 1  </span></span><br><span class="line">    <span class="keyword">if</span> (<span class="number">1</span>) &#123;  </span><br><span class="line">        <span class="keyword">int</span> x = <span class="number">2</span>;  </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d, "</span>, x); <span class="comment">// 2  </span></span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, x); <span class="comment">// 1  </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>C语言在解析变量时是以块作用域来声明的，只有进入一个块(比如 if 块)只有作用域该块的<br>变量才能声明并且不会影响到块外的数据(比如形参和实参的互不影响)。</p>
+<p><b>但是</b>，js并不是这样处理的，js是函数级作用域(function-level scope)，也就是进入<br>块并不会创建一个新的作用域，只有使用函数才会创建一个新的作用域。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;  <span class="comment">//函数声明是一个域。</span></span><br><span class="line"><span class="keyword">var</span> x = <span class="number">1</span>; </span><br><span class="line"><span class="keyword">if</span> (x) &#123; </span><br><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="comment">//函数声明再创建一个新的作用域，与包含函数的作用域不是一个域</span></span><br><span class="line">                <span class="comment">//如果要相互之间传参就涉及到了闭包的问题了。</span></span><br><span class="line"><span class="keyword">var</span> x = <span class="number">2</span>; </span><br><span class="line"><span class="comment">// some other code </span></span><br><span class="line">&#125;()); </span><br><span class="line">&#125; </span><br><span class="line"><span class="comment">// x is still 1.  //所以上边函数的作用域不会影响原本的x</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-变量提升"><a href="#2-变量提升" class="headerlink" title="2.变量提升"></a>2.变量提升</h3><p>先介绍变量提升。很简单，就是把变量提升提到函数的顶部(如果是全局的实际上也是一个大的函数)。需要说明的是，<br>变量提升只是提升变量的声明，并不会把赋值也提升上来。例如：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(a);<span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">var</span> a=<span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure></p>
+<p>另外补充一下<br>在javascript，变量有4种基本方式进入作用域：<br>1 语言内置：所有的作用域里都有this和arguments；(arguments在全局作用域是不可见的)<br>2 形式参数：函数的形式参数会作为函数体作用域的一部分；<br>3 函数声明：像这种形式：function foo(){}；<br>4 变量声明：像这样：var foo；<br>并且无论定义该变量的块是否能被执行，都会被提升<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">false</span>)</span><br><span class="line">    &#123; <span class="keyword">var</span> x =<span class="number">1</span>;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//等于</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">false</span>)</span><br><span class="line">    &#123; x =<span class="number">1</span>;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>所以为了代码能正确运行，建议把要用到的变量都手动的提升到顶部，出bug时调试能够更明确。</p>
+<p>再测试一下<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">        <span class="keyword">while</span>(<span class="literal">false</span>) &#123; <span class="keyword">var</span> a = <span class="number">1</span>; &#125; <span class="built_in">console</span>.log(a); </span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">       <span class="keyword">if</span>(!(<span class="string">"a"</span> <span class="keyword">in</span> <span class="built_in">window</span>)) &#123; a = <span class="number">1</span> &#125; <span class="built_in">console</span>.log(a); </span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">      <span class="built_in">console</span>.log(a);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>答案为:<span style="color:red">undefined , 1 , ReferenceError: a is not defined  </span><br>其中第二题要考虑过程，一开始a并没有通过var声明于是作用域没有将它提升，所以if判断true进入内部，<br>此时赋予a值，于是a=1；</p>
+<p>补充，使不使用var来定义变量有很大的区别<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">alert(a);  </span><br><span class="line"><span class="keyword">var</span> a=<span class="number">1</span>;  </span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">alert(a);</span><br><span class="line">a=<span class="number">1</span>;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>第二个会报错，因为在 a=1 之前并没有 a 的声明，所以报错找不到 a 等到 a = 1 才会即时把<br>a 加入到 window 里。</p>
+<h3 id="3-函数提升"><a href="#3-函数提升" class="headerlink" title="3.函数提升"></a>3.函数提升</h3><p>类似于变量提升，函数提升也是把函数声明提升到顶部，也要考虑作用域的问题，定义在<br>一个函数内部的函数只会提升到该函数的顶部不会提升到全局。<br>例如：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sayHi();</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sayHi</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"hi"</span>);</span><br><span class="line">&#125;<span class="comment">//并不会说找不到函数，因为sayHi被提升到顶部了</span></span><br></pre></td></tr></table></figure></p>
+<p>定义函数有两种方式：一种是函数申明，另一种是函数表达式。<br>函数声明形式：function functionName(arg0, arg1, arg2) { //函数体 }<br>函数表达式形式：var functionName = function(arg0, arg1, arg2) { //函数体 }<br><b>注意</b> 能够被提升的只有函数声明形式，表达式形式并不能被提升。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myTest</span>(<span class="params"></span>)</span>&#123; </span><br><span class="line">foo(); <span class="comment">//提升成功，因为是声明形式</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123; </span><br><span class="line">alert(<span class="string">"我来自 foo"</span>); </span><br><span class="line">&#125; </span><br><span class="line">&#125; </span><br><span class="line">myTest();  </span><br><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">function myTest()&#123; </span><br><span class="line">foo();  //提升失败因为是表达式形式不能被提升，报错foo is not a function</span><br><span class="line">var foo =function foo()&#123; </span><br><span class="line">alert("我来自 foo"); </span><br><span class="line">&#125; </span><br><span class="line">&#125; </span><br><span class="line">myTest(); </span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>同样的不受块影响，只要声明了一定会提升</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!(<span class="string">"a"</span> <span class="keyword">in</span> <span class="built_in">window</span>)) </span><br><span class="line">&#123; <span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123; <span class="built_in">window</span>.a = <span class="number">1</span>; &#125;&#125; </span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">//function a()&#123; ... &#125;</span></span><br></pre></td></tr></table></figure>
+<p>练习：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;  </span><br><span class="line">    foo(); <span class="comment">// TypeError "foo is not a function"  </span></span><br><span class="line">    bar(); <span class="comment">// "this will run!"  </span></span><br><span class="line">    <span class="keyword">var</span> foo = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="comment">// 变量指向函数表达式  </span></span><br><span class="line">        alert(<span class="string">"this won't run!"</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123; <span class="comment">// 函数声明 函数名为bar  </span></span><br><span class="line">        alert(<span class="string">"this will run!"</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">test();</span><br></pre></td></tr></table></figure></p>
+<h3 id="4-变量提升与函数提升的比较"><a href="#4-变量提升与函数提升的比较" class="headerlink" title="4.变量提升与函数提升的比较"></a>4.变量提升与函数提升的比较</h3><p>既然两者都会提升，那么必然会引发优先级的问题，js的机制十分明确：<br>赋值&gt;函数声明&gt;变量声明<br>看例子来体会：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(a);<span class="comment">//function a()&#123;&#125;</span></span><br><span class="line"><span class="keyword">var</span> a=<span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line"><span class="built_in">console</span>.log(a);<span class="comment">// 1</span></span><br></pre></td></tr></table></figure></p>
+<p>首先因为js规定了函数声明优先于var声明，所以会覆盖var a的声明所以第一个输出为function a<br>而中间因为给 a 赋值了1，所以function a 被覆盖了，所以第二个显示 1 。</p>
+<p>练习：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="literal">false</span>; &#125;</span><br><span class="line"><span class="keyword">var</span> s = <span class="string">''</span>;</span><br><span class="line"><span class="keyword">if</span>(a()) &#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(a);</span><br><span class="line">      <span class="comment">//上述代码输出的a值为：function a() &#123; return false; &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="literal">true</span>; &#125;</span><br><span class="line"><span class="keyword">var</span> s = <span class="string">''</span>;</span><br><span class="line"><span class="keyword">if</span>(a()) &#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(a);</span><br><span class="line">      <span class="comment">//上述代码输出的a值为：1</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="literal">true</span>; &#125;</span><br><span class="line"><span class="keyword">var</span> a;</span><br><span class="line"><span class="keyword">var</span> s = <span class="string">''</span>;</span><br><span class="line"><span class="keyword">if</span>(a()) &#123;</span><br><span class="line">    a = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(a);</span><br><span class="line">      <span class="comment">//上述代码输出的a值为：1</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>看完了js的变量提升和函数提升，知道了js是如何处理变量声明和函数声明以及处理的优先级。<br>所以在以后写js代码时要注意变量的作用域，尽可能把要用到的变量都手动的写道顶部可以避免<br>一些逻辑上的错误，在嵌套函数时候要知道如何使用作用域不干扰外部的变量。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/js/">js</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2016/04/17/jsfunctionup/" data-title="javascript的变量提升和函数提升 | MZJ的博客" data-tsina="undefined" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/04/11/review/"  title="鹅厂一面问题总结">
+ <strong>下一篇：</strong><br/> 
+ <span>鹅厂一面问题总结
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-作用域"><span class="toc-number">1.</span> <span class="toc-text">1. 作用域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-变量提升"><span class="toc-number">2.</span> <span class="toc-text">2.变量提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-函数提升"><span class="toc-number">3.</span> <span class="toc-text">3.函数提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-变量提升与函数提升的比较"><span class="toc-number">4.</span> <span class="toc-text">4.变量提升与函数提升的比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="https://github.com/lianMo" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/js/" title="js">js<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/教程/" title="教程">教程<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/网站安全/" title="网站安全">网站安全<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ajax/" title="ajax">ajax<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/js/" title="js">js<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/跨域/" title="跨域">跨域<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/面试/" title="面试">面试<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Github/" title="Github">Github<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=undefined&verifier=b3593ceb&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> A student learning more .... <br/>
+			Nothing is impossible.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3904284832" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/https://github.com/lianMo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="lianMo">lianMo</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
