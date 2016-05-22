@@ -81,6 +81,86 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/05/22/JScall/" title="JavaScript call函数" itemprop="url">JavaScript call函数</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="lianMo" target="_blank" itemprop="author">lianMo</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-22T09:11:48.000Z" itemprop="datePublished"> 发表于 2016-05-22</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>在JavaScript中有一个很有用的函数，常用于继承和代码复用上<br>那就是 call() 函数。<br>先来看看函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">call([thisObj[,arg1[, arg2[, [,.argN]]]]]) </span><br><span class="line"></span><br><span class="line">obj1.method1.call(obj2,argument1,argument2) //使用方法</span><br></pre></td></tr></table></figure>
+<p>描述：<br>调用一个对象的一个方法，以另一个对象替换当前对象。<br>参数：<br>thisObj<br>可选项。将被用作当前对象的对象。<br>arg1, arg2, , argN<br>可选项。将被传递方法参数序列。 </p>
+<p>说明 </p>
+<p>call 方法可以用来代替另一个对象调用一个方法。call 方法可将一个函数的对象上下文从初始的上下文改变为由 thisObj 指定的新对象。 </p>
+<p>如果没有提供 thisObj 参数，那么 Global 对象被用作 thisObj。 </p>
+<p>光看上边的解释很难清除call函数的用法，下面举个例子来介绍：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">function add(a,b) </span><br><span class="line">&#123; </span><br><span class="line">    alert(a+b); </span><br><span class="line">&#125; </span><br><span class="line">function sub(a,b) </span><br><span class="line">&#123; </span><br><span class="line">    alert(a-b); </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">add.call(sub,3,1);</span><br></pre></td></tr></table></figure>
+<p>最后弹出的是4<br>分析：因为call的效果就是把obj1(add)的方法放到obj2(sub)上使用，后边的都是<br>要使用时传入的参数。也就是说把加法的方法强制的加到减法上使用，虽然是减法实际上<br>做的是加法的函数。<br>可以看成是<br>add.call(sub,3,1) == add(3,1) </p>
+<p>再看一个例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">function Class1() </span><br><span class="line">&#123; </span><br><span class="line">    this.name = &quot;class1&quot;; </span><br><span class="line"></span><br><span class="line">    this.showNam = function() </span><br><span class="line">    &#123; </span><br><span class="line">        alert(this.name); </span><br><span class="line">    &#125; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">function Class2() </span><br><span class="line">&#123; </span><br><span class="line">    this.name = &quot;class2&quot;; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">var c1 = new Class1(); </span><br><span class="line">var c2 = new Class2(); </span><br><span class="line"></span><br><span class="line">c1.showNam.call(c2);</span><br></pre></td></tr></table></figure></p>
+<p>虽然Class2一开始没有定义showNam的方法，但是通过call把c2替代了c1<br>执行showNam方法，此时的this指向的对象是c2，所以实际上执行<br>alert(“class2”)。</p>
+<p>call方法更多的使用在继承上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">function Class1() </span><br><span class="line">&#123; </span><br><span class="line">    this.showTxt = function(txt) </span><br><span class="line">    &#123; </span><br><span class="line">        alert(txt); </span><br><span class="line">    &#125; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">function Class2() </span><br><span class="line">&#123; </span><br><span class="line">    Class1.call(this); </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">var c2 = new Class2(); </span><br><span class="line"></span><br><span class="line">c2.showTxt(&quot;cc&quot;);</span><br></pre></td></tr></table></figure>
+<p>Class2没有定义showTxt函数，但是通过在Class2内部引用Class1.call(this)，把<br>Class1的方法都复制给Class2了，所以c2也可以直接使用showTxt()函数。实现了继<br>承的效果。</p>
+<p>同理可以实现多重继承<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">function Class10() </span><br><span class="line">&#123; </span><br><span class="line">    this.showSub = function(a,b) </span><br><span class="line">    &#123; </span><br><span class="line">        alert(a-b); </span><br><span class="line">    &#125; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">function Class11() </span><br><span class="line">&#123; </span><br><span class="line">    this.showAdd = function(a,b) </span><br><span class="line">    &#123; </span><br><span class="line">        alert(a+b); </span><br><span class="line">    &#125; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">function Class2() </span><br><span class="line">&#123; </span><br><span class="line">    Class10.call(this); </span><br><span class="line">    Class11.call(this); //继承了两个类的方法</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><b>需要注意</b>的是，如果被继承的两个类中有相同的成员将会被按照<br>继承顺序所覆盖。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">function baseA()  // base Class A</span><br><span class="line">  &#123;</span><br><span class="line">   this.member = &quot;baseA member&quot;;</span><br><span class="line">   this.showSelfA = function()</span><br><span class="line">   &#123;</span><br><span class="line">    window.alert(this.member);</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  function baseB()  // base Class B</span><br><span class="line">  &#123;</span><br><span class="line">   this.member = &quot;baseB member&quot;;</span><br><span class="line">   this.showSelfB = function()</span><br><span class="line">   &#123;</span><br><span class="line">    window.alert(this.member);</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  function extendAB()  // Inherit Class from A and B</span><br><span class="line">  &#123;</span><br><span class="line">   baseA.call(this); // call for A</span><br><span class="line">   baseB.call(this); // call for B</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  window.onload = function()</span><br><span class="line">  &#123;</span><br><span class="line">   var extend = new extendAB(); </span><br><span class="line">   extend.showSelfA();  // show A</span><br><span class="line">   extend.showSelfB();  // show B</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>最后输出的是<br>baseB member<br>baseB member</p>
+<p>原因是extendAB对象的成员变量member在被baseB.call(this);实例化时，被baseB的<br>成员member覆盖了，即extendAB的成员member由baseA member赋值成了baseB member<br>所以在继承时需要多加注意。</p>
+<p>此外还需要注意的一点是要弄清楚call后this指向的是哪个对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">var func = new function()</span><br><span class="line">  &#123;</span><br><span class="line">   this.a = &quot;func&quot;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  var func2 = function(x)</span><br><span class="line">  &#123;</span><br><span class="line">   var a = &quot;func2&quot;;</span><br><span class="line">   alert(this.a);    </span><br><span class="line">   alert(x);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  func2.call(func, &quot;func3&quot;);      // show func and func2</span><br></pre></td></tr></table></figure>
+<p>最后结果<br>func<br>func3<br>1、函数func2调用call方法，this默认指向第一个参数func函数对象，因此this.value为this.a，即func<br>2、函数func2调用call方法，第二个参数属于函数对象func2的参数，因此alert(x)为第二个参数func3</p>
+<p>最后再提一点就是 <b>call()</b> 和 <b>apply()</b> 的区别</p>
+<p>根据函数说明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">call( thisArg [，arg1，arg2，… ] );       // 参数列表，arg1，arg2，...</span><br><span class="line">apply(thisArg [，argArray] );                 // 参数数组，argArray</span><br></pre></td></tr></table></figure>
+<p>实际上两者的效果是一样的，区别在于call的参数部分(arg1,arg2…)是不固定的，<br>可以是任意类型，但是apply的一定是数组才可以。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/js/">js</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/05/14/phpcache/" title="PHP缓存" itemprop="url">PHP缓存</a>
   </h1>
   <p class="article-author">By
@@ -849,7 +929,7 @@ PHP：只需要使用如下的代码设置即可。
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/网站安全/" title="网站安全">网站安全<sup>2</sup></a></li>
+				<li><a href="/tags/js/" title="js">js<sup>3</sup></a></li>
 			
 		
 			
@@ -857,15 +937,11 @@ PHP：只需要使用如下的代码设置即可。
 			
 		
 			
-				<li><a href="/tags/js/" title="js">js<sup>2</sup></a></li>
+				<li><a href="/tags/网站安全/" title="网站安全">网站安全<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/面试/" title="面试">面试<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/跨域/" title="跨域">跨域<sup>1</sup></a></li>
+				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
 			
 		
 			
@@ -877,11 +953,15 @@ PHP：只需要使用如下的代码设置即可。
 			
 		
 			
-				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
+				<li><a href="/tags/跨域/" title="跨域">跨域<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/网络/" title="网络">网络<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/面试/" title="面试">面试<sup>1</sup></a></li>
 			
 		
 		</ul>
