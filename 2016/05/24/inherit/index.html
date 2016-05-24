@@ -4,26 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>纳格算法 | MZJ的博客</title>
+    <title>关于JS的call函数的一点补充 | MZJ的博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="lianMo">
     
 
     
-    <meta name="description" content="因为之前看文档看到了这个算法就有点感兴趣，上网找了一篇介绍。转载ggjucheng博客纳格算法是以减少封包传送量来增进TCP/IP网络的效能。 它是由约翰．纳格任职于Ford Aerospace时命名。
-纳格的文件，Congestion Control in IP/TCP Internetworks (RFC896) 描述了他所谓的“小封包问题”－某个应用程式不断地送出小单位的资料，且某些常只占1">
+    <meta name="description" content="关于JavaScript的call函数在实际用过后有一点需要补充，call的继承只会复制父类自定义的成员，但是通过原型链绑定的方法不会被call方法所复制。
+1234567891011121314function Base()&amp;#123;    this.name = &amp;quot;Base&amp;quot;;    this.tell = function(str)&amp;#123; alert(str);&amp;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="纳格算法">
-<meta property="og:url" content="http://yoursite.com/2016/05/13/nagle/index.html">
+<meta property="og:title" content="关于JS的call函数的一点补充">
+<meta property="og:url" content="http://yoursite.com/2016/05/24/inherit/index.html">
 <meta property="og:site_name" content="MZJ的博客">
-<meta property="og:description" content="因为之前看文档看到了这个算法就有点感兴趣，上网找了一篇介绍。转载ggjucheng博客纳格算法是以减少封包传送量来增进TCP/IP网络的效能。 它是由约翰．纳格任职于Ford Aerospace时命名。
-纳格的文件，Congestion Control in IP/TCP Internetworks (RFC896) 描述了他所谓的“小封包问题”－某个应用程式不断地送出小单位的资料，且某些常只占1">
-<meta property="og:updated_time" content="2016-05-14T03:30:14.229Z">
+<meta property="og:description" content="关于JavaScript的call函数在实际用过后有一点需要补充，call的继承只会复制父类自定义的成员，但是通过原型链绑定的方法不会被call方法所复制。
+1234567891011121314function Base()&amp;#123;    this.name = &amp;quot;Base&amp;quot;;    this.tell = function(str)&amp;#123; alert(str);&amp;">
+<meta property="og:updated_time" content="2016-05-24T09:37:12.337Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="纳格算法">
-<meta name="twitter:description" content="因为之前看文档看到了这个算法就有点感兴趣，上网找了一篇介绍。转载ggjucheng博客纳格算法是以减少封包传送量来增进TCP/IP网络的效能。 它是由约翰．纳格任职于Ford Aerospace时命名。
-纳格的文件，Congestion Control in IP/TCP Internetworks (RFC896) 描述了他所谓的“小封包问题”－某个应用程式不断地送出小单位的资料，且某些常只占1">
+<meta name="twitter:title" content="关于JS的call函数的一点补充">
+<meta name="twitter:description" content="关于JavaScript的call函数在实际用过后有一点需要补充，call的继承只会复制父类自定义的成员，但是通过原型链绑定的方法不会被call方法所复制。
+1234567891011121314function Base()&amp;#123;    this.name = &amp;quot;Base&amp;quot;;    this.tell = function(str)&amp;#123; alert(str);&amp;">
 
     
     <link rel="alternative" href="/atom.xml" title="MZJ的博客" type="application/atom+xml">
@@ -83,14 +83,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/05/13/nagle/" title="纳格算法" itemprop="url">纳格算法</a>
+      <a href="/2016/05/24/inherit/" title="关于JS的call函数的一点补充" itemprop="url">关于JS的call函数的一点补充</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="lianMo" target="_blank" itemprop="author">lianMo</a>
 		
   <p class="article-time">
-    <time datetime="2016-05-13T03:34:10.000Z" itemprop="datePublished"> 发表于 2016-05-13</time>
+    <time datetime="2016-05-24T08:54:24.000Z" itemprop="datePublished"> 发表于 2016-05-24</time>
     
   </p>
 </header>
@@ -103,17 +103,12 @@
 		
 		</div>
 		
-		<p>因为之前看文档看到了这个算法就有点感兴趣，上网找了一篇介绍。<br>转载<a href="http://www.cnblogs.com/ggjucheng/archive/2012/01/15/2323070.html" target="_blank" rel="external">ggjucheng博客</a><br>纳格算法是以减少封包传送量来增进TCP/IP网络的效能。 它是由约翰．纳格任职于Ford Aerospace时命名。</p>
-<p>纳格的文件，Congestion Control in IP/TCP Internetworks (RFC896) 描述了他所谓的“小封包问题”－某个应用程式不断地送出小单位的资料，且某些常只占1字节大小。 因为TCP封包具有40字节的标头资讯(TCP与IPv4各占20字节)，这导致了41字节大小的封包只有1字节的可用资讯，造成庞大的浪费。 这种状况常常发生于Telnet工作阶段－大部分的键盘操作会产生1字节的资料并马上送出。 更糟的是，在慢速的网络连线下，这类的封包会大量地在同一时点传输，造成壅塞碰撞(Congestion Collapse)。</p>
-<p>纳格算法的工作方式是合并(coalescing)一定数量的输出资料后一次送出。特别的是，只要有已送出的封包尚未确认，传送者会持续缓冲封包，直到累积一定数量的资料才送出。</p>
-<p>Nagle算法非常简单，但它能解决问题。这个算法是为发送端的TCP用的：</p>
-<ol>
-<li>发送端的TCP将它从发送应用程序收到的第一块数据发送出去，哪怕只有一个字节。</li>
-<li>在发送第一个报文段（即报文段1）以后，发送端的TCP就在输出缓存中积累数据，并等待：或者接收端的TCP发送出一个确认，或者数据已积累到可以装成一个最大的报文段。在这个时候，发送端的TCP就可以发送这个报文段。</li>
-<li>对剩下的传输，重复步骤2。这就是：如果收到了对报文段x的确认，或者数据已积累到可以装成一个最大的报文段，那么就发送下一个报文段(x + 1)。</li>
-</ol>
-<p>Nagle算法的优点就是简单，并且它考虑到应用程序产生数据的速率，以及网络运输数据的速率。若应用程序比网络更快，则报文段就更大（最大报文段）。若应用程序比网络慢，则报文段就较小（小于最大报文段）。</p>
-<p>算法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">if there is new data to send</span><br><span class="line">  if the window size &gt;= MSS and available data is &gt;= MSS</span><br><span class="line">    send complete MSS segment now</span><br><span class="line">  else</span><br><span class="line">    if there is unconfirmed data still in the pipe</span><br><span class="line">      enqueue data in the buffer until an acknowledge is received</span><br><span class="line">    else</span><br><span class="line">      send data immediately</span><br><span class="line">    end if</span><br><span class="line">  end if</span><br><span class="line">end if</span><br></pre></td></tr></table></figure></p>
+		<p>关于JavaScript的call函数在实际用过后有一点需要补充，<br>call的继承只会复制父类自定义的成员，但是通过原型链绑定的方法不会被<br>call方法所复制。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">function Base()</span><br><span class="line">&#123;</span><br><span class="line">    this.name = &quot;Base&quot;;</span><br><span class="line">    this.tell = function(str)&#123; alert(str);&#125;;</span><br><span class="line">&#125;</span><br><span class="line">Base.prototype.sayHello = function()&#123; alert(this.name);&#125;;//通过原型链绑定方法</span><br><span class="line"></span><br><span class="line">function Child()</span><br><span class="line">&#123;</span><br><span class="line">    Base.call(this);//通过call复制</span><br><span class="line">&#125;</span><br><span class="line">var c = new Child();</span><br><span class="line">c.tell(&quot;c calling&quot;);</span><br><span class="line">c.sayHello();</span><br></pre></td></tr></table></figure>
+<p>上述代码会报错对象c找不到方法sayHello(),所以call方法无法连同原型链一起复制。</p>
+<p>相对应的nodeJS里边的函数inherit()则只进行原型链绑定方法的继承而不进行构造函数<br>里定义的成员的继承。</p>
+<p>假如需要都继承还是要用回原型继承的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">function Base()</span><br><span class="line">&#123;</span><br><span class="line">    this.name = &quot;Base&quot;;</span><br><span class="line">    this.tell = function(str)&#123; alert(str);&#125;;</span><br><span class="line">&#125;</span><br><span class="line">Base.prototype.sayHello = function()&#123; alert(this.name);&#125;;//通过原型链绑定方法</span><br><span class="line"></span><br><span class="line">function Child()</span><br><span class="line">&#123;</span><br><span class="line">    //Base.call(this);//使用原型继承这句就不需要了。</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">Child.prototype = new Base();//通过原型继承</span><br><span class="line">Child.prototype.constructor = Child; //重新指向构造的是Child类的对象</span><br><span class="line"></span><br><span class="line">var c = new Child();</span><br><span class="line">c.tell(&quot;c calling&quot;);</span><br><span class="line">c.sayHello();</span><br></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -122,7 +117,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/网络/">网络</a>
+  <span></span> <a href="/tags/js/">js</a>
   </div>
 
 </div>
@@ -131,7 +126,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2016/05/13/nagle/" data-title="纳格算法 | MZJ的博客" data-tsina="undefined" class="share clearfix">
+	  <div data-url="http://yoursite.com/2016/05/24/inherit/" data-title="关于JS的call函数的一点补充 | MZJ的博客" data-tsina="undefined" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -144,19 +139,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2016/05/14/phpcache/" title="PHP缓存">
-  <strong>上一篇：</strong><br/>
-  <span>
-  PHP缓存</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2016/04/17/jsfunctionup/"  title="javascript的变量提升和函数提升">
+<a href="/2016/05/22/JScall/"  title="JavaScript call函数">
  <strong>下一篇：</strong><br/> 
- <span>javascript的变量提升和函数提升
+ <span>JavaScript call函数
 </span>
 </a>
 </div>
